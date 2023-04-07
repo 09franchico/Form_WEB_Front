@@ -1,29 +1,16 @@
 import { Environment } from '../../../environment';
+import { IDetalhePessoa, IPessoa } from '../../../types/Pessoa';
 import { Api } from '../axios-config';
 
 
-export interface IListagemPessoa {
-  id: number;
-  email: string;
-  cidadeId: number;
-  nomeCompleto: string;
-}
-
-export interface IDetalhePessoa {
-  id: number;
-  email: string;
-  cidadeId: number;
-  nomeCompleto: string;
-}
-
-type TPessoasComTotalCount = {
-  data: IListagemPessoa[];
-  totalCount: number;
+type TPessoasComTipoDados = {
+  status?:number,
+  message?:string,
+  data: IPessoa[];
 }
 
 
-
-const getAll = async (page = 1, filter = ''): Promise<TPessoasComTotalCount | Error> => {
+const getAll = async (): Promise<TPessoasComTipoDados | Error> => {
   try {
     const urlRelativa = `/pessoa`;
 
@@ -31,8 +18,9 @@ const getAll = async (page = 1, filter = ''): Promise<TPessoasComTotalCount | Er
 
     if (data) {
       return {
+        status:data.status,
         data,
-        totalCount: Number(headers['x-total-count'] || 10),
+        message:data.message,
       };
     }
 
