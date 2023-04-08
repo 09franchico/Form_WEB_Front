@@ -1,21 +1,29 @@
 import { ReactNode } from "react"
+import { InputText } from "primereact/inputtext";
+import { Button } from 'primereact/button';
+import { FerramentaCriacao } from "../environment/ferramenta-criacao";
 
 type Props = {
-    children: ReactNode
+    children: ReactNode,
+    urlFerramenta?:string
+    mostrarFerramenta:boolean
 }
 
-export const LayoutPage = ({ children }: Props) => {
+export const LayoutPage = ({ children,urlFerramenta,mostrarFerramenta}: Props) => {
     return (
         <div className="card">
             <div className="card-container flex justify-content-between bg-primary-800 ">
                 <div className="card-container flex justify-content-center align-items-center">
-                    <h1 className="m-3"><i className="pi pi-prime" style={{ color: '#708090',fontSize:50 }}></i></h1>
+                    <h1 className="m-3"><i className="pi pi-prime" style={{ color: '#708090', fontSize: 50 }}></i></h1>
                 </div>
                 <div className="card-container flex m-3">
-                    <h4 className="text-200 "><i className="pi pi-user m-2" style={{ color: '#708090',fontSize:20 }}></i>Usuario</h4>
-                    <h4 className="text-200 "><i className="pi pi-user m-2" style={{ color: '#708090',fontSize:20 }}></i>Perfil</h4>
+                    <h4 className="text-200 "><i className="pi pi-user m-2" style={{ color: '#708090', fontSize: 20 }}></i>Usuario</h4>
+                    <h4 className="text-200 "><i className="pi pi-lock-open m-2" style={{ color: '#708090', fontSize: 20 }}></i>Perfil</h4>
                 </div>
             </div>
+            {mostrarFerramenta &&
+               <FerramentaCriacao url={urlFerramenta}/>
+            }
             <div>
                 {children}
             </div>

@@ -35,17 +35,25 @@ export const Pessoa = ()=>{
         CustomerService.getCustomersMedium().then((data) => setCustomers(data as any));
     }, []);
 
+    // pi-user-plus
     return(
-        <LayoutPage>
+        <LayoutPage urlFerramenta='/pessoa' mostrarFerramenta={true}>
              <div className="card">
                 <DataTable value={customers} paginator rows={5} rowsPerPageOptions={[5, 10, 25, 50]} tableStyle={{ minWidth: '50rem' }}>
-                    <Column field="name" header="Name" style={{ width: '25%' }}></Column>
-                    <Column field="country.name" header="Country" style={{ width: '25%' }}></Column>
-                    <Column field="company" header="Company" style={{ width: '25%' }}></Column>
-                    <Column field="representative.name" header="Representative" style={{ width: '25%' }}></Column>
-                    <Column  body={<Button icon="pi pi-eye" severity="secondary" aria-label="eye" />}></Column>
-                    <Column header="Ações" body={<Button icon="pi pi-pencil" severity="info" aria-label="pencil" />}></Column>
-                    <Column  body={<Button  icon="pi pi-trash" severity="danger" onClick={HandleClick} />} style={{ width: '5%' }}></Column>
+                    <Column field="name" header="Nome" style={{ width: '10%' }}></Column>
+                    <Column field="country.name" header="Data de Nascimento" style={{ width: '10%' }}></Column>
+                    <Column field="company" header="Bairro" style={{ width: '10%' }}></Column>
+                    <Column field="representative.name" header="CEP" style={{ width: '10%' }}></Column>
+                    <Column header="Ações"  body={
+                          <div>
+                            <Button className='m-1' icon="pi pi-eye" severity="secondary" aria-label="eye" />
+                            <Button className='m-1' icon="pi pi-user-plus" severity="success" aria-label="Plus" />
+                            <Button className='m-1' icon="pi pi-pencil" severity="info" aria-label="pencil"/>
+                            <Button className='m-1' icon="pi pi-trash" severity="danger" onClick={HandleClick} />
+                          </div>
+                          } style={{width:"6.5%"}} align={'center'}>
+                    
+                    </Column>
                 </DataTable>
             </div>
         </LayoutPage>
