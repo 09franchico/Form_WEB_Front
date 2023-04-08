@@ -9,6 +9,24 @@ type TPessoasComTipoDados = {
   data: IPessoa[];
 }
 
+type TpessoaComTipoDetalhe = {
+  status?:number,
+  message?:string,
+  data: {
+    id?: number
+    nome: string;
+    dataNascimento: string
+    imagem: string,
+    endereco: {
+        bairro: string,
+        rua: string,
+        numero: number,
+        cep: string
+    }
+  }
+
+}
+
 
 const getAll = async (): Promise<TPessoasComTipoDados | Error> => {
   try {
@@ -19,7 +37,7 @@ const getAll = async (): Promise<TPessoasComTipoDados | Error> => {
     if (data) {
       return {
         status:data.status,
-        data,
+        data:data.data,
         message:data.message,
       };
     }
@@ -31,12 +49,16 @@ const getAll = async (): Promise<TPessoasComTipoDados | Error> => {
   }
 };
 
-const getById = async (id: number): Promise<IDetalhePessoa | Error> => {
+const getById = async (id: number): Promise<TpessoaComTipoDetalhe | Error> => {
   try {
     const { data } = await Api.get(`/pessoa/${id}`);
 
     if (data) {
-      return data;
+      return {
+        data:data.data,
+        message:data.message,
+        status:data.status 
+      };
     }
 
     return new Error('Erro ao consultar o registro.');
@@ -63,7 +85,7 @@ const create = async (dados: Omit<IDetalhePessoa, 'id'>): Promise<number | Error
 
 const updateById = async (id: number, dados: IDetalhePessoa): Promise<void | Error> => {
   try {
-    await Api.put(`/pessoas/${id}`, dados);
+    await Api.put<IDetalhePessoa>(`/pessoa/${id}`, dados);
   } catch (error) {
     console.error(error);
     return new Error((error as { message: string }).message || 'Erro ao atualizar o registro.');

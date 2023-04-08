@@ -1,7 +1,7 @@
 import { ReactNode } from "react"
 import { InputText } from "primereact/inputtext";
 import { Button } from 'primereact/button';
-import { FerramentaCriacao } from "../environment/ferramenta-criacao";
+import { FerramentaCriacao } from "../components";
 
 type Props = {
     children: ReactNode,

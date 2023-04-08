@@ -7,11 +7,16 @@ export interface IPessoa {
 }
 
 export interface IDetalhePessoa {
-    id: number,
-    nome: string,
-    dataNascimento: Date,
+    id: number
+    nome: string;
+    dataNascimento: string
     imagem: string,
-    endereco: IEndereco
+    endereco: {
+        bairro: string,
+        rua: string,
+        numero: number,
+        cep: string
+    }
 }
 
 interface IEndereco {
