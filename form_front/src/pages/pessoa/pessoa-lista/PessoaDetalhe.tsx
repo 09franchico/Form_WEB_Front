@@ -9,6 +9,8 @@ import { classNames } from 'primereact/utils';
 import { InputMask } from "primereact/inputmask";
 import { useNavigate, useParams } from "react-router";
 import { PessoasService } from "../../../shared/service/api/pessoa/PessoaService";
+import { useState } from "react"
+import moment from "moment";
 
 interface FormValues {
     id?: number
@@ -28,18 +30,27 @@ export const PessoaDetalhe = () => {
     const navigate = useNavigate()
     const { id = 'nova' } = useParams<'id'>();
 
-    //Show Sucesso ao submeter o formulario
-    const show = (data: FormValues) => {
-        toast.current.show({
-            severity: 'success',
-            summary: 'Formulario submetido com sucesso'
-        });
-
+    //Show Sucesso ao submeter o formulario 1 - Create , 2 - Update
+    const show = (opcao:number) => {
+        if(opcao == 1){
+            toast.current.show({
+                severity: 'success',
+                summary: 'Pessoa criada com sucesso'
+            });
+        }
+        if(opcao == 2){
+            toast.current.show({
+                severity: 'success',
+                summary: 'Update realizado com sucesso'
+            });
+        }
+        
         setTimeout(() => {
             navigate("/");
         }, 3000);
     };
 
+    //Verifca se é criacao ou update de pessoa
     useEffect(() => {
         if (id !== 'nova') {
             PessoasService.getById(Number(id))
@@ -79,7 +90,7 @@ export const PessoaDetalhe = () => {
                 bairro: '',
                 rua: '',
                 numero: 0,
-                cep: ''
+                cep: '0'
             }
         },
         validate: (data: FormValues) => {
@@ -94,8 +105,18 @@ export const PessoaDetalhe = () => {
             if (!data.endereco?.rua) {
                 errors.endereco = { rua: "Rua - Obrigatorio" }
             }
+            if (!data.endereco?.bairro) {
+                errors.endereco = { bairro: "Bairro - Obrigatorio" }
+            }
+            if (!data.endereco?.numero) {
+                errors.endereco = { numero: "Numero - Obrigatorio" }
+            }
+            if (!data.endereco?.cep) {
+                errors.endereco = { cep: "cep - Obrigatorio" }
+            }
 
             return errors;
+
         },
         onSubmit: (data: FormValues) => {
             //Salva pessoa
@@ -107,7 +128,7 @@ export const PessoaDetalhe = () => {
                             alert(result.message);
                         } else {
                             formik.resetForm();
-                            data && show(data);
+                            data && show(1);
                         }
                     });
 
@@ -120,7 +141,7 @@ export const PessoaDetalhe = () => {
                             alert(result.message);
                         } else {
                             formik.resetForm();
-                            data && show(data);
+                            data && show(2);
                         }
                     });
 
@@ -171,7 +192,7 @@ export const PessoaDetalhe = () => {
                                 <Calendar
                                     id="dataNascimento"
                                     name="dataNascimento"
-                                    value={formik.values.dataNascimento}
+                                    value={moment(formik.values.dataNascimento).toDate()}
                                     onChange={(e) => formik.setFieldValue('dataNascimento', e.target.value)}
                                     className={classNames({ 'p-invalid': isFormFieldInvalid('dataNascimento') })}
                                 />
@@ -191,10 +212,10 @@ export const PessoaDetalhe = () => {
                                 name="cep"
                                 value={formik.values.endereco.cep}
                                 onChange={(e) => {
-                                    formik.setFieldValue('endereco.cep', e.target.value);
+                                    formik.setFieldValue('endereco.cep',e.target.value);
                                 }}
-                                mask="999999-999"
-                                placeholder="999999-999"
+                                mask="99999-999"
+                                placeholder="99999-999"
                                 className={classNames({ 'p-invalid': isFormFieldInvalid('endereco') })}
                             />
                             <label htmlFor="input_value">CEP</label>
