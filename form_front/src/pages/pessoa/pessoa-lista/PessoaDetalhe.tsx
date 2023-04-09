@@ -8,6 +8,7 @@ import { Toast } from 'primereact/toast';
 import { classNames } from 'primereact/utils';
 import { InputMask } from "primereact/inputmask";
 import { useNavigate, useParams } from "react-router";
+import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 import { PessoasService } from "../../../shared/service/api/pessoa/PessoaService";
 import { useState } from "react"
 import moment from "moment";
@@ -30,27 +31,27 @@ export const PessoaDetalhe = () => {
     const navigate = useNavigate()
     const { id = 'nova' } = useParams<'id'>();
 
-    //Show Sucesso ao submeter o formulario 1 - Create , 2 - Update
-    const show = (opcao:number) => {
-        if(opcao == 1){
+    //Show Sucesso ao submeter o formulario 1 - Create , 2 - Update ----------------------------
+    const show = (opcao: number) => {
+        if (opcao == 1) {
             toast.current.show({
                 severity: 'success',
                 summary: 'Pessoa criada com sucesso'
             });
         }
-        if(opcao == 2){
+        if (opcao == 2) {
             toast.current.show({
                 severity: 'success',
                 summary: 'Update realizado com sucesso'
             });
         }
-        
+
         setTimeout(() => {
             navigate("/");
-        }, 3000);
+        }, 2000);
     };
 
-    //Verifca se é criacao ou update de pessoa
+    //Verifca se é criacao ou update de pessoa -------------------------------------------------
     useEffect(() => {
         if (id !== 'nova') {
             PessoasService.getById(Number(id))
@@ -80,7 +81,7 @@ export const PessoaDetalhe = () => {
     }, [id]);
 
 
-    //Configuração Formik
+    //Configuração Formik ---------------------------------------------------------------------------
     const formik = useFormik<FormValues>({
         initialValues: {
             nome: '',
@@ -150,7 +151,31 @@ export const PessoaDetalhe = () => {
     });
 
 
-    //Validação dos fomularios
+    //Confirmar cancel na pagina --------------------------------------------------------------------------
+    const accept = () => {
+        toast.current.show({ severity: 'info', summary: 'Confirmado', detail: 'Você aceitou', life: 1000 });
+        
+        setTimeout(() => {
+            navigate("/");
+        }, 2000);
+    }
+    const reject = () => {
+        toast.current.show({ severity: 'warn', summary: 'Rejeitado', detail: 'Você rejeitou', life: 1000 });
+    }
+    const confirma = () => {
+        confirmDialog({
+            message: 'Tem certeza de que deseja concelar?',
+            header: 'Confirmar',
+            icon: 'pi pi-exclamation-triangle',
+            acceptLabel: 'Sim',
+            rejectLabel: 'Não',
+            accept,
+            reject
+        });
+    };
+
+
+    //Validação dos fomularios ---------------------------------------------------------------------------
     const isFormFieldInvalid = (name: keyof FormValues) => !!(formik.touched[name] && formik.errors[name]);
     const getFormErrorMessage = (name: keyof FormValues) => {
         const error = formik.errors[name];
@@ -171,6 +196,7 @@ export const PessoaDetalhe = () => {
                         <span className="m-1">
                             <span className="p-float-label">
                                 <Toast ref={toast} />
+                                <ConfirmDialog />
                                 <InputText
                                     size={50}
                                     id="nome"
@@ -202,8 +228,7 @@ export const PessoaDetalhe = () => {
                         </span>
                     </div>
 
-                    <label htmlFor="text" className="my-3">Informações de endereço</label>
-
+                    <label htmlFor="text" className="my-3 ml-2">Informações de endereço</label>
                     {/* Campo de input CEP */}
                     <span className="m-1">
                         <span className="p-float-label">
@@ -212,7 +237,7 @@ export const PessoaDetalhe = () => {
                                 name="cep"
                                 value={formik.values.endereco.cep}
                                 onChange={(e) => {
-                                    formik.setFieldValue('endereco.cep',e.target.value);
+                                    formik.setFieldValue('endereco.cep', e.target.value);
                                 }}
                                 mask="99999-999"
                                 placeholder="99999-999"
@@ -279,9 +304,11 @@ export const PessoaDetalhe = () => {
                     </div>
 
                     {/* Botão para submeter o formulario */}
-                    <Button type="submit" label="Submit" />
+                    <div className="card-container flex justify-content-end">
+                        <Button type="button" label="Cancelar" severity="danger" outlined onClick={confirma} />
+                        <Button className="ml-3" type="submit" label="Salvar" />
+                    </div>
                 </form>
-
             </div>
 
         </LayoutPage>

@@ -9,7 +9,7 @@ type TPessoasComTipoDados = {
   data: IPessoa[];
 }
 
-type TpessoaComTipoDetalhe = {
+export type TpessoaComTipoDetalhe = {
   status?:number,
   message?:string,
   data: {
