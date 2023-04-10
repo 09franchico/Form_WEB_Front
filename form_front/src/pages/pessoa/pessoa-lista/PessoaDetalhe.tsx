@@ -6,11 +6,13 @@ import { Calendar } from 'primereact/calendar';
 import { Button } from 'primereact/button';
 import { Toast } from 'primereact/toast';
 import { classNames } from 'primereact/utils';
+import { FileUpload } from 'primereact/fileupload';
 import { InputMask } from "primereact/inputmask";
 import { useNavigate, useParams } from "react-router";
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 import { PessoasService } from "../../../shared/service/api/pessoa/PessoaService";
 import { useState } from "react"
+import * as Yup from "yup";
 import moment from "moment";
 
 interface FormValues {
@@ -31,7 +33,7 @@ export const PessoaDetalhe = () => {
     const navigate = useNavigate()
     const { id = 'nova' } = useParams<'id'>();
 
-    //Show Sucesso ao submeter o formulario 1 - Create , 2 - Update ----------------------------
+    //Show Sucesso ao submeter o formulario 1 - Create , 2 - Update 
     const show = (opcao: number) => {
         if (opcao == 1) {
             toast.current.show({
@@ -51,7 +53,7 @@ export const PessoaDetalhe = () => {
         }, 2000);
     };
 
-    //Verifca se é criacao ou update de pessoa -------------------------------------------------
+    //Verifca se é criacao ou update de pessoa 
     useEffect(() => {
         if (id !== 'nova') {
             PessoasService.getById(Number(id))
@@ -81,7 +83,26 @@ export const PessoaDetalhe = () => {
     }, [id]);
 
 
-    //Configuração Formik ---------------------------------------------------------------------------
+    const SignupSchema = Yup.object().shape({
+        nome: Yup.string()
+            .min(2, 'Too Short!')
+            .max(70, 'Too Long!')
+            .required('Nome é obrigatorio'),
+        dataNascimento: Yup.string()
+            .required('Data de nascimento obrigatorio'),
+        endereco: Yup.object().shape({
+            bairro: Yup.string().required("Bairro é obrigatorio"),
+            rua: Yup.string().required("Rua é obrigatorio"),
+            numero: Yup.number().required("Numero é obrigatorio"),
+            cep: Yup.string().required("CEP é obrigatorio"),
+
+        })
+
+
+    });
+
+
+    //Configuração Formik 
     const formik = useFormik<FormValues>({
         initialValues: {
             nome: '',
@@ -94,32 +115,9 @@ export const PessoaDetalhe = () => {
                 cep: '0'
             }
         },
-        validate: (data: FormValues) => {
-            let errors: FormikErrors<FormValues> = {};
-
-            if (!data.nome) {
-                errors.nome = 'Nome - Obrigatorio';
-            }
-            if (!data.dataNascimento) {
-                errors.dataNascimento = "Data de Nascimento - Obrigatorio"
-            }
-            if (!data.endereco?.rua) {
-                errors.endereco = { rua: "Rua - Obrigatorio" }
-            }
-            if (!data.endereco?.bairro) {
-                errors.endereco = { bairro: "Bairro - Obrigatorio" }
-            }
-            if (!data.endereco?.numero) {
-                errors.endereco = { numero: "Numero - Obrigatorio" }
-            }
-            if (!data.endereco?.cep) {
-                errors.endereco = { cep: "cep - Obrigatorio" }
-            }
-
-            return errors;
-
-        },
+        validationSchema: SignupSchema,
         onSubmit: (data: FormValues) => {
+            console.log("dados imahe", data)
             //Salva pessoa
             if (id === "nova") {
                 PessoasService
@@ -151,10 +149,10 @@ export const PessoaDetalhe = () => {
     });
 
 
-    //Confirmar cancel na pagina --------------------------------------------------------------------------
+    //Confirmar cancel na pagina 
     const accept = () => {
         toast.current.show({ severity: 'info', summary: 'Confirmado', detail: 'Você aceitou', life: 1000 });
-        
+
         setTimeout(() => {
             navigate("/");
         }, 2000);
@@ -174,17 +172,10 @@ export const PessoaDetalhe = () => {
         });
     };
 
-
-    //Validação dos fomularios ---------------------------------------------------------------------------
-    const isFormFieldInvalid = (name: keyof FormValues) => !!(formik.touched[name] && formik.errors[name]);
-    const getFormErrorMessage = (name: keyof FormValues) => {
-        const error = formik.errors[name];
-        return isFormFieldInvalid(name) && error ? (
-            <small className="p-error">{String(error)}</small>
-        ) : (
-            <small className="p-error">&nbsp;</small>
-        );
+    const onUpload = () => {
+        toast.current.show({ severity: 'info', summary: 'Success', detail: 'File Uploaded' });
     };
+
 
     return (
         <LayoutPage mostrarFerramenta={false}>
@@ -205,11 +196,12 @@ export const PessoaDetalhe = () => {
                                     onChange={(e) => {
                                         formik.setFieldValue('nome', e.target.value);
                                     }}
-                                    className={classNames({ 'p-invalid': isFormFieldInvalid('nome') })}
                                 />
                                 <label htmlFor="input_value">Nome</label>
                             </span>
-                            {getFormErrorMessage('nome')}
+                            {formik.touched.nome && formik.errors.nome ? (
+                            <small className="p-error">{formik.errors.nome}</small>
+                        ) : null}
                         </span>
 
                         {/* Campo de input DATA DE NASCIMENTO */}
@@ -220,14 +212,21 @@ export const PessoaDetalhe = () => {
                                     name="dataNascimento"
                                     value={moment(formik.values.dataNascimento).toDate()}
                                     onChange={(e) => formik.setFieldValue('dataNascimento', e.target.value)}
-                                    className={classNames({ 'p-invalid': isFormFieldInvalid('dataNascimento') })}
                                 />
                                 <label htmlFor="input_value">Data de Nascimento</label>
                             </span>
-                            {getFormErrorMessage('dataNascimento')}
+                            {formik.touched.dataNascimento && formik.errors.dataNascimento ? (
+                            <small className="p-error">{formik.errors.dataNascimento}</small>
+                        ) : null}
                         </span>
                     </div>
-
+                    <FileUpload
+                        mode="basic"
+                        name="imagem"
+                        url="/api/upload"
+                        accept="image/*"
+                        maxFileSize={1000000}
+                        onUpload={onUpload} />
                     <label htmlFor="text" className="my-3 ml-2">Informações de endereço</label>
                     {/* Campo de input CEP */}
                     <span className="m-1">
@@ -241,11 +240,12 @@ export const PessoaDetalhe = () => {
                                 }}
                                 mask="99999-999"
                                 placeholder="99999-999"
-                                className={classNames({ 'p-invalid': isFormFieldInvalid('endereco') })}
                             />
                             <label htmlFor="input_value">CEP</label>
                         </span>
-                        {getFormErrorMessage('endereco')}
+                        {formik.touched.endereco?.cep && formik.errors.endereco?.cep ? (
+                            <small className="p-error">{formik.errors.endereco?.cep}</small>
+                        ) : null}
                     </span>
 
                     <div className="card-container flex">
@@ -260,11 +260,12 @@ export const PessoaDetalhe = () => {
                                     onChange={(e) => {
                                         formik.setFieldValue('endereco.rua', e.target.value);
                                     }}
-                                    className={classNames({ 'p-invalid': isFormFieldInvalid("endereco") })}
                                 />
                                 <label htmlFor="input_value">Rua</label>
                             </span>
-                            {getFormErrorMessage('endereco')}
+                            {formik.touched.endereco?.rua && formik.errors.endereco?.rua ? (
+                                <small className="p-error">{formik.errors.endereco?.rua}</small>
+                            ) : null}
                         </span>
 
                         {/* Campo de input Bairro */}
@@ -277,11 +278,12 @@ export const PessoaDetalhe = () => {
                                     onChange={(e) => {
                                         formik.setFieldValue('endereco.bairro', e.target.value);
                                     }}
-                                    className={classNames({ 'p-invalid': isFormFieldInvalid("endereco") })}
                                 />
                                 <label htmlFor="input_value">Bairro</label>
                             </span>
-                            {getFormErrorMessage('endereco')}
+                            {formik.touched.endereco?.bairro && formik.errors.endereco?.bairro ? (
+                                <small className="p-error">{formik.errors.endereco?.bairro}</small>
+                            ) : null}
                         </span>
 
                         {/* Campo de input Numero */}
@@ -294,11 +296,12 @@ export const PessoaDetalhe = () => {
                                     onChange={(e) => {
                                         formik.setFieldValue('endereco.numero', e.target.value);
                                     }}
-                                    className={classNames({ 'p-invalid': isFormFieldInvalid("endereco") })}
                                 />
                                 <label htmlFor="input_value">Numero</label>
                             </span>
-                            {getFormErrorMessage('endereco')}
+                            {formik.touched.endereco?.numero && formik.errors.endereco?.numero ? (
+                                <small className="p-error">{formik.errors.endereco?.numero}</small>
+                            ) : null}
 
                         </span>
                     </div>
