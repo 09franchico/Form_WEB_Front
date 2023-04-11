@@ -149,14 +149,14 @@ export const PessoaDetalhe = () => {
 
     //Confirmar cancel na pagina 
     const accept = () => {
-        toast.current.show({ severity: 'info', summary: 'Confirmado', detail: 'Você aceitou', life: 1000 });
+        toast.current.show({ severity: 'info', summary: 'Confirmado', detail: 'Cancelado com sucesso', life: 1000 });
 
         setTimeout(() => {
             navigate("/");
         }, 2000);
     }
     const reject = () => {
-        toast.current.show({ severity: 'warn', summary: 'Rejeitado', detail: 'Você rejeitou', life: 1000 });
+        toast.current.show({ severity: 'warn', summary: 'Rejeitado', detail: 'Rejeitou com sucesso', life: 1000 });
     }
     const confirma = () => {
         confirmDialog({
