@@ -224,6 +224,7 @@ export const PessoaDetalhe = () => {
                         name="imagem"
                         url="/api/upload"
                         accept="image/*"
+                        chooseLabel="Imagem"
                         maxFileSize={1000000}
                         onUpload={onUpload} />
                     <label htmlFor="text" className="my-3 ml-2">Informações de endereço</label>
