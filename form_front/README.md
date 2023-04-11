@@ -1,5 +1,5 @@
 
-#Projeto feito em REACT - TYPESCRIPT - VITE - PrimeFace
+# Projeto feito em REACT - TYPESCRIPT - VITE - PrimeFace
 
 # Docker da aplicação / Deploy
 - Para subir é preciso do docker instalado.
