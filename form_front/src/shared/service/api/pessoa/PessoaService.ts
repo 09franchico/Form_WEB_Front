@@ -27,6 +27,27 @@ export type TpessoaComTipoDetalhe = {
 
 }
 
+const getAllFiltro = async (filtro:string): Promise<TPessoasComTipoDados | Error> => {
+  try {
+    const urlRelativa = `/pessoa/filtro?filtro=${filtro}`;
+
+    const { data, headers } = await Api.get(urlRelativa);
+
+    if (data) {
+      return {
+        status:data.status,
+        data:data.data,
+        message:data.message,
+      };
+    }
+
+    return new Error('Erro ao listar os registros.');
+  } catch (error) {
+    console.error(error);
+    return new Error((error as { message: string }).message || 'Erro ao listar os registros.');
+  }
+};
+
 
 const getAll = async (): Promise<TPessoasComTipoDados | Error> => {
   try {
@@ -104,6 +125,7 @@ const deleteById = async (id: number): Promise<void | Error> => {
 
 export const PessoasService = {
   getAll,
+  getAllFiltro,
   create,
   getById,
   updateById,

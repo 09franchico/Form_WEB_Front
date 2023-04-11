@@ -7,9 +7,10 @@ type Props = {
     children: ReactNode,
     urlFerramenta?:string
     mostrarFerramenta:boolean
+    filtroFerramenta?: React.Dispatch<React.SetStateAction<string>>
 }
 
-export const LayoutPage = ({ children,urlFerramenta,mostrarFerramenta}: Props) => {
+export const LayoutPage = ({ children,urlFerramenta,mostrarFerramenta,filtroFerramenta}: Props) => {
     return (
         <div className="card">
             <div className="card-container flex justify-content-between bg-primary-800 ">
@@ -22,7 +23,7 @@ export const LayoutPage = ({ children,urlFerramenta,mostrarFerramenta}: Props) =
                 </div>
             </div>
             {mostrarFerramenta &&
-               <FerramentaCriacao url={urlFerramenta}/>
+               <FerramentaCriacao url={urlFerramenta} setfiltro={filtroFerramenta}/>
             }
             <div>
                 {children}

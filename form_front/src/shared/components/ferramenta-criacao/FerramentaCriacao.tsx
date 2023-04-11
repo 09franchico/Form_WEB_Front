@@ -4,9 +4,10 @@ import { useNavigate } from "react-router";
 
 type Props = {
     url?:string,
+    setfiltro?: React.Dispatch<React.SetStateAction<string>>
 }
 
-export const FerramentaCriacao = ({url}:Props) => {
+export const FerramentaCriacao = ({url,setfiltro}:Props) => {
     const navigate = useNavigate()
 
     const lidarNavegacao = ()=>{
@@ -20,7 +21,16 @@ export const FerramentaCriacao = ({url}:Props) => {
             <div>
                 <span className="p-input-icon-left">
                     <i className="pi pi-search" />
-                    <InputText placeholder="Search" width={500} />
+                    <InputText 
+                         placeholder="Search" 
+                         width={500} 
+                         onChange={(e) => {
+                            if (setfiltro) {
+                              setfiltro(e.target.value);
+                            }
+                          }}
+                         />
+
                 </span>
             </div>
             <div className="mr-2">

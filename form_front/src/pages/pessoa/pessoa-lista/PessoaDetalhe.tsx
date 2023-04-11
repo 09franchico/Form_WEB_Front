@@ -5,15 +5,14 @@ import { InputText } from "primereact/inputtext";
 import { Calendar } from 'primereact/calendar';
 import { Button } from 'primereact/button';
 import { Toast } from 'primereact/toast';
-import { classNames } from 'primereact/utils';
 import { FileUpload } from 'primereact/fileupload';
 import { InputMask } from "primereact/inputmask";
 import { useNavigate, useParams } from "react-router";
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 import { PessoasService } from "../../../shared/service/api/pessoa/PessoaService";
-import { useState } from "react"
 import * as Yup from "yup";
 import moment from "moment";
+import { InputNumber } from 'primereact/inputnumber';
 
 interface FormValues {
     id?: number
@@ -200,8 +199,8 @@ export const PessoaDetalhe = () => {
                                 <label htmlFor="input_value">Nome</label>
                             </span>
                             {formik.touched.nome && formik.errors.nome ? (
-                            <small className="p-error">{formik.errors.nome}</small>
-                        ) : null}
+                                <small className="p-error">{formik.errors.nome}</small>
+                            ) : null}
                         </span>
 
                         {/* Campo de input DATA DE NASCIMENTO */}
@@ -210,14 +209,15 @@ export const PessoaDetalhe = () => {
                                 <Calendar
                                     id="dataNascimento"
                                     name="dataNascimento"
-                                    value={moment(formik.values.dataNascimento).toDate()}
+                                    dateFormat="dd/mm/yy"
+                                    value={formik.values.dataNascimento ? moment(formik.values.dataNascimento).toDate() : null}
                                     onChange={(e) => formik.setFieldValue('dataNascimento', e.target.value)}
                                 />
                                 <label htmlFor="input_value">Data de Nascimento</label>
                             </span>
                             {formik.touched.dataNascimento && formik.errors.dataNascimento ? (
-                            <small className="p-error">{formik.errors.dataNascimento}</small>
-                        ) : null}
+                                <small className="p-error">{formik.errors.dataNascimento}</small>
+                            ) : null}
                         </span>
                     </div>
                     <FileUpload
@@ -289,14 +289,17 @@ export const PessoaDetalhe = () => {
                         {/* Campo de input Numero */}
                         <span className="m-1">
                             <span className="p-float-label">
-                                <InputText
+                                <InputNumber
                                     id="numero"
                                     name="numero"
-                                    value={formik.values.endereco.numero.toString()}
-                                    onChange={(e) => {
-                                        formik.setFieldValue('endereco.numero', e.target.value);
+                                    value={formik.values.endereco.numero}
+                                    onValueChange={(e) => {
+                                        const value = e.target.value ?? ''; 
+                                        formik.setFieldValue('endereco.numero', value);
                                     }}
-                                />
+                                    mode="decimal"
+                                    showButtons
+                                     />
                                 <label htmlFor="input_value">Numero</label>
                             </span>
                             {formik.touched.endereco?.numero && formik.errors.endereco?.numero ? (
