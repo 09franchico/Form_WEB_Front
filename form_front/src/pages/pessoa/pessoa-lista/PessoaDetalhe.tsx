@@ -84,8 +84,7 @@ export const PessoaDetalhe = () => {
 
     const SignupSchema = Yup.object().shape({
         nome: Yup.string()
-            .min(2, 'Too Short!')
-            .max(70, 'Too Long!')
+            .min(3, 'Minimo 3 caracteres')
             .required('Nome é obrigatorio'),
         dataNascimento: Yup.string()
             .required('Data de nascimento obrigatorio'),
@@ -294,7 +293,7 @@ export const PessoaDetalhe = () => {
                                     name="numero"
                                     value={formik.values.endereco.numero}
                                     onValueChange={(e) => {
-                                        const value = e.target.value ?? ''; 
+                                        const value = e.target.value ?? '';
                                         formik.setFieldValue('endereco.numero', value);
                                     }}
                                     mode="decimal"
