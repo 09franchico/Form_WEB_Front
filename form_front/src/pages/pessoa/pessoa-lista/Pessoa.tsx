@@ -23,7 +23,7 @@ export const Pessoa = () => {
   const [filtro,setFiltro] = useState("");
 
   const accept = (id: number) => {
-    toast.current.show({ severity: 'info', summary: 'Confirmado', detail: 'você aceitou', life: 1000 });
+    toast.current.show({ severity: 'info', summary: 'Confirmado', detail: 'Excluido com sucesso', life: 1000 });
     PessoasService.deleteById(id)
       .then((result) => {
         if (result instanceof Error) {
@@ -35,7 +35,7 @@ export const Pessoa = () => {
       });
   }
   const reject = () => {
-    toast.current.show({ severity: 'warn', summary: 'Rejeitado', detail: 'você rejeitou', life: 1000 });
+    toast.current.show({ severity: 'warn', summary: 'Rejeitado', detail: 'Rejeitado com sucesso', life: 1000 });
   }
 
   useEffect(() => {
