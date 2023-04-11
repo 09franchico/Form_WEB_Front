@@ -29,7 +29,6 @@ export const Pessoa = () => {
         if (result instanceof Error) {
           alert(result.message);
         } else {
-          console.log(result)
           setPessoa(pessoas => pessoas.filter(pessoa => pessoa.id !== id));
         }
       });
@@ -47,7 +46,6 @@ export const Pessoa = () => {
         } else {
           setProgresso(false)
           setPessoa(result.data)
-          console.log("Passou aqui os dados", result.data);
         }
       });
   }, [filtro]);
