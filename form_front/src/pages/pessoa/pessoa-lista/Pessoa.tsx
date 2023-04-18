@@ -11,6 +11,7 @@ import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 import { Toast } from 'primereact/toast';
 import { ModalPessoa } from '../../../shared/components';
 import moment from 'moment';
+import { useDebounce } from '../../../shared/hooks';
 
 
 export const Pessoa = () => {
@@ -21,6 +22,7 @@ export const Pessoa = () => {
   const [progresso, setProgresso] = useState(false)
   const [idPessoa, setIdPessoa] = useState(0)
   const [filtro,setFiltro] = useState("");
+    const {debounce} = useDebounce()
 
   const accept = (id: number) => {
     toast.current.show({ severity: 'info', summary: 'Confirmado', detail: 'Excluido com sucesso', life: 1000 });
@@ -39,7 +41,8 @@ export const Pessoa = () => {
 
   useEffect(() => {
     setProgresso(true)
-    PessoasService.getAllFiltro(filtro)
+    debounce(()=>{
+      PessoasService.getAllFiltro(filtro)
       .then((result) => {
         if (result instanceof Error) {
           alert(result.message);
@@ -48,9 +51,11 @@ export const Pessoa = () => {
           setPessoa(result.data)
         }
       });
+
+    })
   }, [filtro]);
 
-
+  
   //Delete da pessoa
   const HandleDeleteId = (id: number) => {
     confirmDialog({
@@ -75,7 +80,7 @@ export const Pessoa = () => {
   return (
     <LayoutPage urlFerramenta='/pessoa' mostrarFerramenta={true} filtroFerramenta={setFiltro}>
       {progresso ?
-        <ProgressBar mode="indeterminate" style={{ height: '6px' }}></ProgressBar>
+        <ProgressBar color='#3B82F6'  mode="indeterminate" style={{ height: '6px',marginLeft:10,marginRight:10 }}></ProgressBar>
         :
         <div className="card">
           <Toast ref={toast} />

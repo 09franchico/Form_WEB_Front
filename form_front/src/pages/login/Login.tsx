@@ -7,6 +7,7 @@ import { useRef, useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import loginImge from '../../assets/Login.svg'
+import { useNavigate } from "react-router";
 
 
 type TInicialValor = {
@@ -15,6 +16,7 @@ type TInicialValor = {
 }
 export const Login = () => {
     const toast = useRef<any>(null);
+    const navegate = useNavigate();
 
     //Validação do fromulario
     const SignupSchema = Yup.object().shape({
@@ -35,8 +37,11 @@ export const Login = () => {
         validationSchema: SignupSchema,
         onSubmit: (value: TInicialValor) => {
             console.log(value)
+            if(value.nome != "" && value.senha != ""){
+                navegate("/")
 
-
+            }
+            
         }
     })
 
@@ -44,7 +49,7 @@ export const Login = () => {
         <div className="flex flex-column md:flex-row h-screen">
             <form onSubmit={Formik.handleSubmit} className="w-full md:w-10 flex flex-column align-items-s justify-content-center gap-3 py-5">
                 <div className="flex justify-content-center align-items-s">
-                    <Avatar image={"https://www.gravatar.com/avatar/05dfd4b41340d09cae045235eb0893c3?d=mp"} className="flex align-items-center justify-content-center mr-2" size="xlarge" />
+                    <h1>FormFS</h1>
                 </div>
                 <div className="flex flex-wrap justify-content-center align-items-center gap-2 flex-column">
                     <span className="p-float-label">
@@ -60,17 +65,14 @@ export const Login = () => {
                         <label htmlFor="username">Nome</label>
                     </span>
                     {Formik.touched.nome && Formik.errors.nome ? (
-                        <small className="p-error text-left">{Formik.errors.nome}</small>
+                        <small className="p-error text-left w-5">{Formik.errors.nome}</small>
                     ) : null}
                 </div>
                 <div className="flex flex-wrap justify-content-center align-items-center gap-2 mt-3 flex-column">
                     <span className="p-float-label">
                         <Password
                             id="senha"
-                            name="senha"
-                            //  mediumLabel="Senha media"
-                            //  weakLabel="Senha facil" 
-                            //  strongLabel="Senha forte" 
+                            name="senha" 
                             inputId="password"
                             value={Formik.values.senha}
                             onChange={(e) =>
@@ -82,7 +84,7 @@ export const Login = () => {
                         <label htmlFor="password">Senha</label>
                     </span>
                     {Formik.touched.senha && Formik.errors.senha ? (
-                        <small className="p-error text-left">{Formik.errors.senha}</small>
+                        <small className="p-error text-left w-5">{Formik.errors.senha}</small>
                     ) : null}
                 </div>
                 <Button label="Login" type="submit" icon="pi pi-user" className="w-10rem mx-auto bg-indigo-600 border-transparent"></Button>
