@@ -13,6 +13,7 @@ import { PessoasService } from "../../../shared/service/api/pessoa/PessoaService
 import * as Yup from "yup";
 import moment from "moment";
 import { InputNumber } from 'primereact/inputnumber';
+import { useState } from "react";
 
 interface FormValues {
     id?: number
@@ -30,6 +31,7 @@ interface FormValues {
 export const PessoaDetalhe = () => {
     const toast = useRef<any>(null);
     const navigate = useNavigate()
+    const [loadingButton, setLoadingButton] = useState(false);
     const { id = 'nova' } = useParams<'id'>();
 
     //Show Sucesso ao submeter o formulario 1 - Create , 2 - Update 
@@ -115,7 +117,7 @@ export const PessoaDetalhe = () => {
         },
         validationSchema: SignupSchema,
         onSubmit: (data: FormValues) => {
-            console.log("dados imahe", data)
+            setLoadingButton(true);
             //Salva pessoa
             if (id === "nova") {
                 PessoasService
@@ -126,11 +128,13 @@ export const PessoaDetalhe = () => {
                         } else {
                             formik.resetForm();
                             data && show(1);
+                            setLoadingButton(false);
                         }
                     });
 
             } else {
                 //Update de pessoa
+                setLoadingButton(true);
                 PessoasService
                     .updateById(Number(id), data as any)
                     .then((result) => {
@@ -139,6 +143,7 @@ export const PessoaDetalhe = () => {
                         } else {
                             formik.resetForm();
                             data && show(2);
+                            setLoadingButton(false);
                         }
                     });
 
@@ -312,7 +317,7 @@ export const PessoaDetalhe = () => {
                     {/* Botão para submeter o formulario */}
                     <div className="card-container flex justify-content-end">
                         <Button type="button" label="Cancelar" severity="danger" outlined onClick={confirma} />
-                        <Button className="ml-3" type="submit" label="Salvar" />
+                        <Button loading={loadingButton} className="ml-3" type="submit" label="Salvar" />
                     </div>
                 </form>
             </div>

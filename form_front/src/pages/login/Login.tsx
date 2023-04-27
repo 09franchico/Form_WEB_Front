@@ -44,7 +44,7 @@ export const Login = () => {
             
         }
     })
-
+    
     return (
         <div className="flex flex-column md:flex-row h-screen">
             <form onSubmit={Formik.handleSubmit} className="w-full md:w-10 flex flex-column align-items-s justify-content-center gap-3 py-5">
