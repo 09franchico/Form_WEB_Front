@@ -29,7 +29,7 @@ export type TpessoaComTipoDetalhe = {
 
 const getAllFiltro = async (filtro:string): Promise<TPessoasComTipoDados | Error> => {
   try {
-    const urlRelativa = `/pessoa/filtro?filtro=${filtro}`;
+    const urlRelativa = `/pessoa/filtro?filtro=${filtro}&limit=10&offset=0`;
 
     const { data, headers } = await Api.get(urlRelativa);
 

@@ -109,11 +109,11 @@ export const LayoutPage = ({ children, urlFerramenta, mostrarFerramenta, filtroF
     return (
         <div className="card">
             <div className="card flex justify-content-center">
-                <Sidebar visible={visible} modal={false} className="layout-config-sidebar w-20rem" onHide={() => setVisible(false)}>
+                {/* <Sidebar visible={visible} modal={false} className="layout-config-sidebar w-20rem" onHide={() => setVisible(false)}>
                     <div className="card flex justify-content-center">
                         <PanelMenu model={items} className="w-full md:w-25rem" />
                     </div>
-                </Sidebar>
+                </Sidebar> */}
             </div>
             <div className="card-container flex justify-content-between align-items-center  bg-primary-800 ">
                 <i className="pi pi-align-justify ml-5" style={{ fontSize: '2rem', color: 'white' }} onClick={() => setVisible(true)}></i>
